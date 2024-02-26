@@ -31,6 +31,14 @@ def adicionar_prefixo_data_hora(diretorio, arquivos_inner):
             novo_caminho = os.path.join(diretorio, novo_nome)
             os.rename(caminho_arquivo, novo_caminho)
 
+def select_directory():
+    uploaded_file = st.sidebar.file_uploader("Escolha um arquivo no diretório desejado", accept_multiple_files=False)
+    if uploaded_file is not None:
+        directory_path = os.path.dirname(uploaded_file.name)
+        st.write(f"Você selecionou o diretório: {directory_path}")
+        # Aqui você pode adicionar mais lógica que depende do diretório selecionado
+        return directory_path
+
 
 if __name__ == '__main__':
 
@@ -47,6 +55,11 @@ if __name__ == '__main__':
         adicionar_prefixo_data_hora(dir_completo, arquivos)
         st.success("Arquivos renomeados com sucesso!")
         arquivos_atualizados = listar_arquivos(dir_completo)
+
+    if st.sidebar.button("Trocar Diretório"):
+        directory = select_directory()
+        dir_anterior = os.getenv('DIR_BASE')
+
 
     # Lista todos os arquivos no diretório escolhido
     caminho_completo = os.path.join(cf.DIR_BASE, option)

@@ -2,6 +2,8 @@ import config as cf
 import streamlit as st
 from datetime import datetime
 import os
+import tkinter as tk
+from tkinter import filedialog
 
 
 def listar_subdiretorios(diretorio_base):
@@ -32,12 +34,15 @@ def adicionar_prefixo_data_hora(diretorio, arquivos_inner):
             os.rename(caminho_arquivo, novo_caminho)
 
 def select_directory():
-    uploaded_file = st.sidebar.file_uploader("Escolha um arquivo no diretório desejado", accept_multiple_files=False)
-    if uploaded_file is not None:
-        directory_path = os.path.dirname(uploaded_file.name)
+    root = tk.Tk()
+    root.withdraw()  # Esconde a janela principal do Tkinter
+    directory_path = filedialog.askdirectory()
+    if directory_path:
         st.write(f"Você selecionou o diretório: {directory_path}")
-        # Aqui você pode adicionar mais lógica que depende do diretório selecionado
         return directory_path
+    else:
+        st.write("Nenhum diretório selecionado.")
+        return None
 
 
 if __name__ == '__main__':
@@ -57,7 +62,7 @@ if __name__ == '__main__':
         arquivos_atualizados = listar_arquivos(dir_completo)
 
     if st.sidebar.button("Trocar Diretório"):
-        directory = select_directory()
+        directory = st.button("Escolha o diretório", on_click=select_directory)
         dir_anterior = os.getenv('DIR_BASE')
 
 
